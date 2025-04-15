@@ -12,9 +12,9 @@ EXPOSE 8787
 
 # Optional: Add custom R packages or other dependencies if needed.
 # Optional: Add required R packages to make then available at container start and persist after container destruction.
-RUN R -e "install.packages(c('tidyverse', 'readxl'))"
+# RUN R -e "install.packages(c('tidyverse', 'readxl'))"
 
-# Stage 2: Build minimal multi-stage image based on Ubuntu
+# Stage 2: Build minimal multi-stage imagse based on Ubuntu
 FROM ubuntu:24.04
 
 
@@ -27,20 +27,20 @@ COPY --from=builder /usr/local/bin/R /usr/local/bin/R
 
 # Install R, runtime dependencies, create, and set rstudio user password 
 # Default user/password is rstudio/rstudio. ### Do not recommended for public accessible deployments. ###
-RUN apt update && \
-    apt install -y --no-install-recommends \
-        r-base \
-        libsqlite3-0 \
-        libblas3 \
-        libdeflate0 \
-        libicu74 \
-        libgomp1 \
-        libreadline8 \
-        sudo \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && useradd -m rstudio \
-    && echo "rstudio:rstudio" | chpasswd \
-    && usermod -aG sudo rstudio
+# RUN apt update && \
+#     apt install -y --no-install-recommends \
+#         r-base \
+#         libsqlite3-0 \
+#         libblas3 \
+#         libdeflate0 \
+#         libicu74 \
+#         libgomp1 \
+#         libreadline8 \
+#         sudo \
+#     && apt-get clean && rm -rf /var/lib/apt/lists/* \
+#     && useradd -m rstudio \
+#     && echo "rstudio:rstudio" | chpasswd \
+#     && usermod -aG sudo rstudio
 
 
 # Expose RStudio's port
