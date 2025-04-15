@@ -92,7 +92,6 @@ jobs:
         run: |
           echo "tag=$(cat VERSION)" >> $GITHUB_OUTPUT
         
-
       - name: Build and push Docker image
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -102,6 +101,19 @@ jobs:
           docker build -t guilhermelinsc/rstudio-ms:${{ steps.version.outputs.tag }} -f docker/Dockerfile .
           docker push guilhermelinsc/rstudio-ms:${{ steps.version.outputs.tag }}       
 
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+        
+      - name: Configure gcloud & set GKE credentials
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet || true
+          gcloud container clusters get-credentials YOUR_CLUSTER_NAME \
+            --zone YOUR_CLUSTER_ZONE \
+            --project YOUR_PROJECT_ID
+        
+        
       - name: Deploy to GKE for testing
         run: |
           kubectl apply -f deploy/deployment.yml
