@@ -48,3 +48,5 @@ EXPOSE 8787
 
 # Set entrypoint to start RStudio server
 CMD ["/usr/lib/rstudio-server/bin/rserver", "--server-daemonize=0", "--server-user=rstudio"]
+
+# Test Github Actions
