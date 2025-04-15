@@ -75,7 +75,7 @@ jobs:
           git checkout -b version-bump/$next
           git add VERSION
           git commit -m "ci: bump version to $next"
-          git push origin version-bump/$next
+          git push --force origin version-bump/v$next
    
 
       - name: Set up Docker Buildx
