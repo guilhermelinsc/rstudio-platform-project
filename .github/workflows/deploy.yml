@@ -19,7 +19,6 @@ jobs:
 
       - name: Configure gcloud & set GKE credentials
         run: |
-          gcloud components install gke-gcloud-auth-plugin --quiet || true
           gcloud container clusters get-credentials test-iac-k8s-cluster \
             --zone us-east1 \
             --project ${{ secrets.GCP_PROJECT_ID }}
