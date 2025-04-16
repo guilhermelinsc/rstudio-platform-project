@@ -18,13 +18,19 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-      - name: Install GKE auth plugin
+      - name: Install GKE gcloud auth plugin
         run: |
-          sudo mkdir -p /usr/share/keyrings
-          curl -sSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg >/dev/null
+          # Add Google Cloud's public GPG key
+          curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+        
+          # Add the Cloud SDK repo with the signed key
           echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | \
             sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
-          sudo apt-get update && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+        
+          # Update & install plugin
+          sudo apt update
+          sudo apt install -y google-cloud-cli-gke-gcloud-auth-plugin
+        
         
         
       - name: Configure gcloud & set GKE credentials
