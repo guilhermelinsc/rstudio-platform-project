@@ -10,10 +10,9 @@ This repository presents a platform engineering project focused on deploying a c
 - **Containerization**: Custom Docker image for RStudio Server, facilitating consistent environments.
 - **Infrastructure as Code**: Terraform scripts for provisioning cloud resources.
 - **CI/CD Pipeline**: GitHub Actions workflows that:
-  - Validate pull requests with deployment tests and security scans.
-  - Build and push Docker images with semantic versioning.
+  - Validate pull requests with deployment tests.
   - Deploy updates to GKE upon successful validations.
-- **Security**: Integration of Trivy for container image vulnerability scanning.
+- **Security**: Integration of Trivy for container image vulnerability scanning on the Docker image repository.
 
 ---
 
