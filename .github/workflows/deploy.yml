@@ -43,7 +43,7 @@ jobs:
 
       - name: Deploy to GKE for testing
         run: |
-          kubectl apply -f deploy/deployment.yml
+          kubectl apply -f deploy/deployment.yml -n test-ns
           kubectl rollout status deployment/rstudio-server -n test-ns
 
       - name: HTTP health check
@@ -98,7 +98,7 @@ jobs:
             --zone us-east1 \
             --project ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Create test namespace if not exists
+      - name: Create rstudio namespace if not exists
         run: |
           kubectl get ns rstudio || kubectl create namespace rstudio
             
