@@ -64,6 +64,7 @@ jobs:
       - name: Clean up test deployment
         run: |
           kubectl delete -f deploy/deployment.yml -n test-ns
+          kubectl delete namespace test-ns || true
 
   gke-deploy:
     name: Deploy to GKE on Merge to Main
