@@ -3,6 +3,7 @@ name: GKE Deployment and Health Check
 on:
   pull_request:
     branches: [main]
+  workflow_dispatch:  # <-- this allows manual runs
 
 jobs:
   test-and-cleanup:
