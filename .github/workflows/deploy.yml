@@ -17,6 +17,11 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
+      - name: Install GKE auth plugin
+        run: |
+          sudo apt update
+          sudo apt install -y google-cloud-sdk-gke-gcloud-auth-plugin
+        
       - name: Configure gcloud & set GKE credentials
         run: |
           gcloud container clusters get-credentials test-iac-k8s-cluster \
