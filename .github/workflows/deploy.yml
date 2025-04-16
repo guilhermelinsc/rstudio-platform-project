@@ -44,11 +44,11 @@ jobs:
       - name: Deploy to GKE for testing
         run: |
           kubectl apply -f deploy/deployment.yml
-          kubectl rollout status deployment/rstudio-deployment -n test-ns
+          kubectl rollout status deployment/rstudio-server -n test-ns
 
       - name: HTTP health check
         run: |
-          app_ip=$(kubectl get svc rstudio-deployment -n test-ns -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          app_ip=$(kubectl get svc rstudio-server -n test-ns -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "Waiting for http://$app_ip:8787"
           for i in {1..10}; do
             if curl -fs "http://$app_ip:8787"; then
