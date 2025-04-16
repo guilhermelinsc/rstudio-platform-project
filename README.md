@@ -36,11 +36,9 @@ These capabilities make R an indispensable tool in cancer research, facilitating
 .
 ├── .github/workflows/    # GitHub Actions workflows for CI/CD
 ├── deploy/               # Kubernetes deployment manifests
-├── docker/               # Dockerfile and related configurations
 ├── infra/                # Terraform scripts for infrastructure provisioning
 ├── .gitignore
 ├── LICENSE
-├── VERSION
 └── README.md
 ```
 
@@ -64,27 +62,40 @@ Provision the GKE Autopilot cluster using Terraform:
 ```bash
 cd infra
 terraform init
+terraform plan
 terraform apply
 ```
+### 2. Connecting to the GKE Cluster
 
-### 2. Build and Push the Docker Image
-
-Build and push your custom RStudio Server image:
+After provisioning the infrastructure with Terraform, you can configure your local CLI to interact with the GKE cluster:
 
 ```bash
-cd docker
-docker build -t guilhermelinsc/rstudio-ms:<version> .
-docker push guilhermelinsc/rstudio-ms:<version>
+gcloud auth login
+gcloud config set project <YOUR_PROJECT_ID>
+gcloud container clusters get-credentials <CLUSTER_NAME> \
+  --zone <CLUSTER_ZONE> \
+  --project <YOUR_PROJECT_ID>
 ```
+##### 📝 Replace the placeholders
 
-> Replace `<version>` with the desired semantic version tag.
+- `<YOUR_PROJECT_ID>` — your actual GCP project ID  
+- `<CLUSTER_NAME>` — the name of the GKE cluster (as defined in your Terraform configuration)  
+- `<CLUSTER_ZONE>` — the zone where the GKE cluster was created  
+
+Once configured, you can verify access to the cluster using `kubectl`:
+
+```bash
+kubectl get nodes
+kubectl get pods -A
+```
 
 ### 3. Deploy to GKE
 
 Apply the Kubernetes manifests:
 
 ```bash
-kubectl apply -f deploy/deployment.yml
+kubectl create namespace rstudio
+kubectl apply -f deploy/deployment.yml -n rstudio
 ```
 
 You can access RStudio by retrieving the external LoadBalancer IP:
@@ -92,6 +103,14 @@ You can access RStudio by retrieving the external LoadBalancer IP:
 ```bash
 kubectl get svc -n rstudio
 ```
+
+---
+## 🐳 Docker 
+
+This project leverages Docker to containerize and run the RStudio Server environment.
+The Docker image is maintained in a separate repository to ensure better modularization and reusability.
+
+The image builds upon the official rocker/rstudio base image and is optimized using a multi-stage build process to significantly reduce size and improve efficiency for production deployments.
 
 ---
 
